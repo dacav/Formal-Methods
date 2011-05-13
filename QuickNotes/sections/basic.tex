@@ -1,0 +1,23 @@
+\begin{itemize}
+
+	\item	Synchronous and Asynchronous composition:
+
+		\begin{itemize}
+		\item	Shared variables give limitations about how the transition
+                can be followed: only \emph{synchronous} will work
+                provided that both machines change the shared variable in
+                the same instant with the same value.
+		\end{itemize}
+
+    \item   Properties:
+
+        \begin{enumerate}
+        \item   Safety (\Intuit{never bad}): refuted by finite behavior
+                (counter-example);
+        \item   Liveness (\Intuit{happens good}): refuted by infinite
+                behavior (loop);
+        \item   Fairness: (\Intuit{infinitely often good}): refuted by
+                infinite behavior (loop);
+        \end{enumerate}
+
+\end{itemize}

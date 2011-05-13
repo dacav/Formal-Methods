@@ -1,0 +1,50 @@
+\usepackage{amsmath, amssymb, braket}
+\usepackage{graphicx}
+\usepackage[ruled, lined, boxed]{algorithm2e}
+\usepackage[colorlinks]{hyperref}
+\usepackage{parcolumns}
+\usepackage{mathpazo}
+
+\newcommand{\LTL}{{\sf LTL}}
+\newcommand{\CTL}{{\sf CTL}}
+\newcommand{\CTLs}{{\sf CTL$^\star$}}
+
+% "intuitive" meaning
+
+\newcommand{\Intuit}[1]{``\emph{#1}''}
+
+% Operators
+
+\newcommand{\Op}[1]{\mathcal{\sf \bf #1}}
+
+\newcommand{\X}[1]{\Op{X}#1}
+\newcommand{\U}[2]{#1\Op{U}#2}
+\newcommand{\G}[1]{\Op{G}#1}
+\newcommand{\F}[1]{\Op{F}#1}
+
+\newcommand{\E}[1]{\mathcal{\Op{E}}#1}
+\newcommand{\A}[1]{\mathcal{\Op{A}}#1}
+
+\newcommand{\EX}[1]{\E{\X{#1}}}
+\newcommand{\EU}[2]{\E({\U{#1}{#2}})}
+\newcommand{\EG}[1]{\E{\G{#1}}}
+\newcommand{\EF}[1]{\E{\F{#1}}}
+
+\newcommand{\AX}[1]{\A{\X{#1}}}
+\newcommand{\AU}[2]{\A{(\U{#1}{#2}})}
+\newcommand{\AG}[1]{\A{\G{#1}}}
+\newcommand{\AF}[1]{\A{\F{#1}}}
+
+\newcommand{\imply}{\rightarrow}
+\newcommand{\Imply}{\Rightarrow}
+
+\newcommand{\IterAnd}[3]{\bigwedge_{#1}^{#2}\left({#3}\right)}
+
+\newcommand{\lOr}{\vee}
+\newcommand{\lAnd}{\wedge}
+
+% Constants
+
+\newcommand{\Good}{\mathcal{{\tt good}}}
+\newcommand{\Bad}{\mathcal{{\tt bad}}}
+

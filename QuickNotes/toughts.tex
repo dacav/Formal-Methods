@@ -1,0 +1,64 @@
+\documentclass[a3paper]{article}
+
+\input{settings}
+
+\title{Toughts}
+\author{Giovanni Simoni}
+
+\begin{document}
+
+    \maketitle
+
+    \section{About expressiveness of \CTL\ and \LTL}
+
+        $\LTL$ is about paths, while $\CTL$ is about single steps in which
+        I can chose, at any time, the direction I'm gonna take on the next
+        step. In the $\LTL$ approach, if I've chosen a path I cannot
+        change my mind.
+
+        \subsection{Express \CTL\ with \LTL}
+
+            \begin{itemize}
+
+            \item   An expression using existential quantifiers in
+                    \CTL\ requires, in order to be satisfied, to be true
+                    for a subset of the available paths.
+
+            \item   All \LTL\ formulae implicitly require an universal
+                    quantification among all possible paths, thus \LTL\
+                    formula, in order to be true, must be satisfied by all
+                    possible paths.
+
+            \end{itemize}
+
+        \subsubsection{Express \LTL\ with \CTL}
+
+            \begin{itemize}
+
+            \item   A typical check we want to achieve is about fairness
+                    properties:
+                    \[
+                    \left(
+                        \IterAnd{f \in \Set{ f_1 \cdots f_n }}{}{\G\F f}
+                    \right)
+                    \imply \psi
+                    \]
+
+            \item   $\G{\F{\phi}}$ in \CTL\ becomes $\AG{\AF{\phi}}$;
+
+            \item   Since $a \imply b$ is defined as $\neg a \lOr b$ we
+                    have a negation of $\G{\F{\phi}}$ terms;
+
+            \item   $\neg \G{\F{\phi}} = \F{\G{\neg \phi}}$, namely
+                    \Intuit{in each path, after a certain point, $\phi$
+                    will never hold again};
+
+            \item   $\neg \AG{\AF{\phi}} = \EF{\EG{\neg \phi}}$, namely
+                    \Intuit{there's a path among many in which $\phi$ is
+                    not holding} (much less restrictive than $\F{\G{\neg
+                    \phi}}$, which requires $\neg \phi$ to hold in all
+                    paths).
+
+            \end{itemize}
+
+\end{document}

@@ -1,0 +1,81 @@
+                       RELEVANT STUFF TO CARE ABOUT
+                       ============================
+
+CTL vs LTL:
+
+    LTL cannot express existential quantification;
+    CTL cannot express fairnes LTL.
+
+    Check the Strong Fairness and the Weak Fairness problem!
+
+Theoretical "lattice" issues:
+
+    Finite convergence & fixed point.
+
+CTL Model checking:
+
+    Denotational semantics [] for { EXp, EGp, EFp, EpUq };
+        - PreImage for [ EXp ];
+        - Fixed point computation for the others.
+    Monotonicity checks;
+    Invariants for safety generally are: [I] \subseteq [\psi]
+
+CTL Symbolic Model checking:
+
+    Formulae based encoding of status + OBDD representation of formulae
+    "\xi" function:
+        - Each set of states Q represented by formula \xi(Q)
+        - Transition relation R is a formula with double number of
+          variables
+        - PreImage(p) computation is achieved by individuation of two
+          models, one composed by next-state variables satisfying p, and
+          one which, in conjunction with the former, satisfied the
+          transition relation.
+        - Building the formula is achieved by building subformulas and
+          applying operators to the OBDD. The check consists in:
+            xi(I) -> \xi(\psi)
+
+    Safety invariants checking:
+
+        - Backward until I is reached
+            - Uses a fixed point method, from bad states make union of
+              preimages up to fixed point. If during preimages
+              construction The formula xi(I) is satisfied stop: we found a
+              bug
+        - Forward from I
+            - Starting form I, at each step build postimage;
+            - Optimization: use magnets and consider only the part of
+              preimage which gets generated from step to step;
+            - Stop if bad state is intersected or fixed point is reached.
+
+Fairness
+
+    Justice (weak fairness)         :   GFp             <== USED
+    Compassion (strong fairness)    :   GFp -> GFq
+
+    Fairness in CTL:
+
+        - Cannot express AGAFp as precondition since it gets negated and
+          we obtain EFEGp [ != FGp ];
+        - Encode fairness condition into model, obtain fair states & fair
+          paths;
+        - Encoding of a expression "fair" which is true only for fair
+          states would allow us to build fair version of any other path
+          specifier:
+            - EfX(psi) = EX(psi ^ fair)
+            - Ef(phi U psi) = E(phi U (psi ^ fair))
+            - Any other comes from them.
+          "fair" formula can be obtained by using Fair SCC
+
+    Fair SCC:   psi ^ fair = EfG [psi]
+
+        - Restrict states of M to the set [psi]
+        - Find Fair Strongly Connected Components C1 … Cn
+        - Build C = Union{ C1 … Cn }
+        - Check_EU([psi], C) namely [psi] U C
+            - [psi] is reachable;
+            - we stay in [psi] until we are in one of the fair SCC in C,
+              say Ci
+            - as the SCC has been computed from M restricted over [psi]
+              all elements of Ci are also elements of [psi];
+

@@ -1,0 +1,52 @@
+\subsection{\LTL}
+
+    \begin{itemize}
+
+    \item   Temporal logic with
+            $\Set{ \X{\phi}, \U{\phi}{\psi}, \G{\phi}, \F{\phi} }$
+
+        \begin{itemize}
+        \item   Based on path $\pi = [s_1, s_2, \cdots ]$ concept;
+        \item   Warn: $\U{p}{q}$ is satisfied only if $q$ will hold in
+                some state.
+        \end{itemize}
+
+    \item   Basic operators: $\set{ \X{\phi}, \U{\psi}{\phi} }$ (the other
+            are syntactic sugar).
+
+    \item   Popular properties:
+
+        \begin{enumerate}
+        \item   Safety: $\G{\Good}$;
+        \item   Liveness: $\G{(p \imply \F{q})}$;
+        \item   Fairness: $\G{\F{q}}$;
+        \item   Strong Fairness: $\G{\F{p}} \imply \G{\F{q}}$.
+        \end{enumerate}
+
+        Note:
+        \begin{itemize}
+        \item   $\G{(p \imply \F{q})} \Imply \G{\F{p}} \imply \G{\F{q}}$
+            \begin{itemize}
+            \item   Proof by logic inference;
+            \end{itemize}
+        \item   $\G{\F{p}} \imply \G{\F{q}} \not\Imply
+                 \G{(p \imply \F{q})}$
+            \begin{itemize}
+                \item   Proof by finding a KM which satisfies $p$ while not
+                        satisfying $\G{\F{p}}$.
+            \end{itemize}
+        \end{itemize}
+
+    \end{itemize}
+
+\subsection{\CTL}
+
+    \begin{itemize}
+
+    \item   Temporal logic with
+            $\Set{ \EX{\phi}, \EU{\phi}{\psi}, \EG{\phi}, \EF{\phi},
+                   \AX{\phi}, \AU{\phi}{\psi}, \AG{\phi}, \AF{\phi} }$
+
+    \end{itemize}
+
+
