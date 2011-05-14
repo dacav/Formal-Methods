@@ -1,0 +1,108 @@
+Basic idea: use formulae to represent set of states.
+\begin{itemize}
+
+    \item   Each state of the Kripke Model is mapped to a truth assignment
+            over $n$ variables;
+
+    \item   Each formula $p$ encodes the set of states for which the
+            formula holds.
+
+\end{itemize}
+
+\subsection{OBDDs}
+
+    \begin{itemize}
+
+    \item   Fixed order for variables, imposed a priori:
+        \begin{itemize}
+
+        \item   Such ordering is crucial w.r.t performances;
+
+        \item   Structure follows the principle of the DPLL for SAT
+                following the ordering:
+
+            \begin{itemize}
+            \item   Starting from the first variable $A_1$ we build two
+                    formulae equal to the original one, the first with all
+                    occurrences of $A_1$ replaced by \emph{True}, the
+                    second with all occurrences of $A_1$ replaced by
+                    \emph{False};
+            \item   The structure handles efficiently Shannon's expansion.
+            \end{itemize}
+
+        \item   The graph {\bf construction} follows the incremental
+                building algorithm (using the \emph{ite}
+                (\Intuit{If-Then-Else}) as basic item and following
+                the variables ordering).
+
+        \end{itemize}
+
+    \item   Reduction technique:
+        \begin{itemize}
+        \item   The structure in principle is tree-shaped, with an
+                exponential number of nodes (a level for each variable,
+                $2^n$ nodes where $n$ is the number of variables.
+        \item   Sharing sub-nodes;
+        \item   Removing redundancies (nodes with the same left and right
+                children collapse into one).
+        \end{itemize}
+
+    \item   Semantics: one-to-one mapping with logic formulae, constant
+            time comparison, validity and unsatisfiability (the complexity
+            is moved into the construction phase).
+
+    \end{itemize}
+
+\subsection{Representation of Kripke Model}
+
+    \begin{itemize}
+
+    \item   A set of states $Q \subseteq S$ corresponds to a formula
+            $\Symb{Q}$ such that $\forall s \in Q \:.\: s \Entails
+            \Symb{Q}$;
+
+        \begin{itemize}
+        \item   Naive construction (exponential size):
+                $\Symb{Q} = \IterOr{s \in Q}{}{\Symb{s}}$;
+        \item   Structurally is mapped on set operators.
+        \end{itemize}
+
+    \item   Transition relation is a single formula with
+            twice the number of variables:
+        \[
+        \Symb{R} = \IterOr{\Tuple{s, s^\prime} \in R}{}
+                                   {\Symb{s} \lAnd \Symb{s^\prime}}
+        \]
+
+    \item   Symbolic Pre-image operation of a set $P$:
+        \[
+        \PreImage{P, R}[V] = \exists V^\prime \:.\: \Symb{P}[V^\prime]
+                             \lAnd \Symb{R}[V, V^\prime]
+        \]
+        \begin{itemize}
+
+        \item   $\mu \cup \mu^\prime \Entails \Symb{P}[V^\prime]
+                            \lAnd \Symb{R}[V, V^\prime]$
+                Where $\mu^\prime$ is the model for the next state, giving
+                $V^\prime$ as assignment of variables.
+
+        \item   Operatively it corresponds to an \emph{or} of all possible
+                assignments $V^\prime$ for the next-state variables (we
+                search for current states mapped into $P$ as next states).
+
+        \end{itemize}
+
+    \item   Symbolic Image operation of a set $P$:
+        \[
+        \Image{P,R}[V'] = \exists V \:.\: \Symb{P}[V] \lAnd
+                          \Symb{R}[V, V^\prime]
+        \]
+        \begin{itemize}
+
+        \item   Operatively it corresponds to an \emph{or} of all possible
+                assignments $V$ for the current-state variables (we search
+                for next states mapped into $P$ as current states).
+
+        \end{itemize}
+
+    \end{itemize}

@@ -13,12 +13,12 @@
 
 \newcommand{\Intuit}[1]{``\emph{#1}''}
 
-% Operators
+% LTL/CTL Operators
 
 \newcommand{\Op}[1]{\mathcal{\sf \bf #1}}
 
 \newcommand{\X}[1]{\Op{X}#1}
-\newcommand{\U}[2]{#1\Op{U}#2}
+\newcommand{\U}[2]{({#1}\Op{U}{#2})}
 \newcommand{\G}[1]{\Op{G}#1}
 \newcommand{\F}[1]{\Op{F}#1}
 
@@ -35,13 +35,28 @@
 \newcommand{\AG}[1]{\A{\G{#1}}}
 \newcommand{\AF}[1]{\A{\F{#1}}}
 
+% Denotation, Symbolic & stuff
+
+\newcommand{\Denot}[1]{\left[{#1}\right]}
+\newcommand{\Symb}[1]{\xi\left({#1}\right)}
+\newcommand{\PreImage}[1]{\mbox{\emph{PreImage}}\left({#1}\right)}
+\newcommand{\Image}[1]{\mbox{\emph{Image}}\left({#1}\right)}
+
+% Fixed points
+
+\newcommand{\MinFP}[2]{\mu{#1}\:.\:{#2}}
+\newcommand{\MaxFP}[2]{\nu{#1}\:.\:{#2}}
+
+% General logic
+
 \newcommand{\imply}{\rightarrow}
 \newcommand{\Imply}{\Rightarrow}
-
 \newcommand{\IterAnd}[3]{\bigwedge_{#1}^{#2}\left({#3}\right)}
-
+\newcommand{\IterOr}[3]{\bigvee_{#1}^{#2}\left({#3}\right)}
 \newcommand{\lOr}{\vee}
 \newcommand{\lAnd}{\wedge}
+\newcommand{\Entails}{\vDash}
+\newcommand{\Tuple}[1]{\left<{#1}\right>}
 
 % Constants
 

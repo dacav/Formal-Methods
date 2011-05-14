@@ -1,0 +1,71 @@
+\subsection{Verification of $M \Entails \phi$}
+
+Achieved by checking $I \subseteq \Denot{\phi}$. If it holds then $M
+\Entails \phi$.
+\begin{itemize}
+
+\item   $\Denot{\phi}$ is built bottom up on the structure of $\phi$;
+
+    \begin{itemize}
+
+    \item   Compute preimage for $\AX$ and $\EX$;
+
+    \item   Tableaux applied up to fixed point for other temporal
+            operators.
+
+    \end{itemize}
+
+\end{itemize}
+
+\subsection{Fixed point for \emph{denotation} operator}
+\begin{itemize}
+\item   Fixed point theory:
+
+    \begin{itemize}
+
+    \item   Complete lattice:
+
+        \begin{itemize}
+
+        \item   Poset ($\Tuple{S, \sqsubset}$ with \emph{reflexivity},
+                \emph{transitivity}, \emph{antisymmetry}) for which both a
+                \emph{least upper bound} and a \emph{greatest lower bound}
+                exist;
+
+        \item   Monotonic function $F \::\: 2^S \mapsto 2^S$;
+
+        \item   Tarski theorem: least and greatest fixed point
+                existence for finite lattice;
+
+        \item   Kleene's theorem: $\cup$-continuous $F$ applied up to
+                least fixed point; $\cap$-continuous $F$ applied up to
+                greatest fixed point.
+
+        \item   Convergence time is finite for a finite $S$
+
+        \end{itemize}
+
+    \item   $\MinFP{X}{F(X)}$ computation starts from $X = \emptyset$ and
+            subsequent computation decrease set up to fixed point
+
+    \item   $\MaxFP{X}{F(X)}$ computation starts from $X = S$.
+
+    \end{itemize}
+
+\item   Fixed point in recursive definition
+
+    \begin{itemize}
+
+    \item   $\Denot{\E{\G{\beta}}} =
+                \MaxFP{Z}{\Denot{\beta} \cap \Denot{\E{\X{Z}}}}$
+    \item   $\Denot{\E{\U{\beta_1}{\beta2}}} =
+                \MinFP{Z}{\Denot{\beta_2} \cup (\Denot{\beta_1} \cap
+                          \Denot{\E{\X{Z}}})}$
+
+    \end{itemize}
+    Note that $\Denot{\E{\X{Y}}}$ for some set $Y$ is computed as the
+    pre-image set.
+
+    Note to self: be ready to build algorithms on the fly.
+
+\end{itemize}
