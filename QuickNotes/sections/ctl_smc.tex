@@ -58,13 +58,14 @@ Basic idea: use formulae to represent set of states.
     \begin{itemize}
 
     \item   A set of states $Q \subseteq S$ corresponds to a formula
-            $\Symb{Q}$ such that $\forall s \in Q \:.\: s \Entails
-            \Symb{Q}$;
+            $\Symb{Q}$ such that
+            \[ \forall s \in Q \:.\: s \Entails \Symb{Q} \]
 
         \begin{itemize}
         \item   Naive construction (exponential size):
                 $\Symb{Q} = \IterOr{s \in Q}{}{\Symb{s}}$;
-        \item   Structurally is mapped on set operators.
+        \item   Structurally is mapped on set operators (although the set
+                of denotations are never explicitly constructed).
         \end{itemize}
 
     \item   Transition relation is a single formula with
@@ -106,3 +107,23 @@ Basic idea: use formulae to represent set of states.
         \end{itemize}
 
     \end{itemize}
+
+\subsection{Checking $M \Entails \psi$}
+
+    \begin{itemize}
+
+    \item   In non-symbolic model checking: $\Denot{I} \subseteq
+            \Denot{\psi}$;
+
+    \item   In symbolic model checking: $\Symb{I} \imply \Symb{\psi}$.
+
+        \begin{itemize}
+        \item   Fixed-point computations in non-symbolic \CTL\ have a
+                symbolic counterpart using OBDDs for logic operations.
+        \end{itemize}
+
+    \end{itemize}
+
+    \Note{Formulas are assumed to be written in terms of $\neg a$,
+          $a \lAnd b$, $\E{\X{a}}$, $\E{\G{a}}$, $\E{\U{a}{b}}$}
+

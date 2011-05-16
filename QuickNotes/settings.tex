@@ -3,15 +3,24 @@
 \usepackage[ruled, lined, boxed]{algorithm2e}
 \usepackage[colorlinks]{hyperref}
 \usepackage{parcolumns}
-\usepackage{mathpazo}
+
+\usepackage{enumitem}
+\setdescription{style=sameline,leftmargin=.6in}
+
+%\usepackage{mathpazo}
 
 \newcommand{\LTL}{{\sf LTL}}
 \newcommand{\CTL}{{\sf CTL}}
 \newcommand{\CTLs}{{\sf CTL$^\star$}}
 
-% "intuitive" meaning
+% Special paragraphs
 
 \newcommand{\Intuit}[1]{``\emph{#1}''}
+\newcommand{\Note}[1]{ %
+    \begin{description} %
+    \item[Note:] {#1} %
+    \end{description} %
+}
 
 % LTL/CTL Operators
 

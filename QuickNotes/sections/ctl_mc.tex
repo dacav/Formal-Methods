@@ -56,16 +56,19 @@ Achieved by checking $I \subseteq \Denot{\phi}$. If it holds then $M
 
     \begin{itemize}
 
-    \item   $\Denot{\E{\G{\beta}}} =
-                \MaxFP{Z}{\Denot{\beta} \cap \Denot{\E{\X{Z}}}}$
-    \item   $\Denot{\E{\U{\beta_1}{\beta2}}} =
+    \item   $\Denot{\E{\G{\alpha}}} =
+                \MaxFP{Z}{\Denot{\alpha} \cap \Denot{\E{\X{Z}}}}$
+    \item   $\Denot{\E{\U{\beta_1}{\beta_2}}} =
                 \MinFP{Z}{\Denot{\beta_2} \cup (\Denot{\beta_1} \cap
                           \Denot{\E{\X{Z}}})}$
 
-    \end{itemize}
-    Note that $\Denot{\E{\X{Y}}}$ for some set $Y$ is computed as the
-    pre-image set.
+    \item   $\Denot{\E{\X{\gamma}}} = \Set{ s \in S \:|\: \exists s^\prime
+                \:.\: \Tuple{s, s^\prime} \in R \lAnd s^\prime \in
+                \Denot{\gamma} }$
 
-    Note to self: be ready to build algorithms on the fly.
+    \end{itemize}
+
+    \Note{Formulas are assumed to be written in terms of $\neg a$,
+          $a \lAnd b$, $\E{\X{a}}$, $\E{\G{a}}$, $\E{\U{a}{b}}$}
 
 \end{itemize}
