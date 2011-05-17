@@ -62,10 +62,17 @@ Basic idea: use formulae to represent set of states.
             \[ \forall s \in Q \:.\: s \Entails \Symb{Q} \]
 
         \begin{itemize}
+
+        \item   $\Symb{}$ maps sets (typically the output of the
+                \emph{denotation} function $\Denot{-}$) into symbolic
+                formulas;
+
         \item   Naive construction (exponential size):
                 $\Symb{Q} = \IterOr{s \in Q}{}{\Symb{s}}$;
+
         \item   Structurally is mapped on set operators (although the set
                 of denotations are never explicitly constructed).
+
         \end{itemize}
 
     \item   Transition relation is a single formula with
@@ -106,6 +113,11 @@ Basic idea: use formulae to represent set of states.
 
         \end{itemize}
 
+    \item   Fixed-point computations can be built in the same way you do
+            for non-symbolic \CTL;
+
+    \item   OBDDs are used for logic operations.
+
     \end{itemize}
 
 \subsection{Checking $M \Entails \psi$}
@@ -115,12 +127,8 @@ Basic idea: use formulae to represent set of states.
     \item   In non-symbolic model checking: $\Denot{I} \subseteq
             \Denot{\psi}$;
 
-    \item   In symbolic model checking: $\Symb{I} \imply \Symb{\psi}$.
-
-        \begin{itemize}
-        \item   Fixed-point computations in non-symbolic \CTL\ have a
-                symbolic counterpart using OBDDs for logic operations.
-        \end{itemize}
+    \item   In symbolic model checking: $\Symb{I} \imply
+            \Symb{\Denot{\psi}}$.
 
     \end{itemize}
 
