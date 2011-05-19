@@ -1,140 +1,109 @@
 #define N_TRAINS 3
 
 mtype {
-    msg0,       /* Message: "train in tunnel" */
-    msg1        /* Message: "has train left the tunnel?" */
-    msg2,       /* Message: "tunnel is free" */
+
+    /* ---- Values for signal light ------------------------------------ */
+
+    green,      /* Green semaphore */
+    red,        /* Red semaphore */
+
+    /* ---- Messages between Operator A and Operator B ----------------- */
+
+    none,       /* No communication */
+    msg0,       /* Train in */
+    msg1,       /* Tunnel free */
+    msg2,       /* Has train left? */
+
 };
 
-bit sig_light = 1;      /* 0 = red; 1 = green */
-bit tunnel_status = 0;  /* 0 = free; 1 = in use */
+/* Status of the system */
+mtype sig_light = green;        // 0 = red; 1 = green
+byte trains_in_tunnel = 0;      // 0 = free; 1 = in use; >1 = error
 
-/* Telegraph from A to B */
-chan tel_toB = [1] of { mtype };
-
-/* Telegraph from B to A */
-chan tel_toA = [1] of { mtype };
-
-inline send_to_B (info)
-{
-    atomic {
-        tel_toB! info;
-        printf("Message A =%e=> B\n", info);
-    }
-}
-
-inline send_to_A (info)
-{
-    atomic {
-        tel_toA! info;
-        printf("Message B =%e=> A\n", info);
-    }
-}
-
-inline flush (tel)
-{
-    mtype drop;
-
-    do
-    :: empty(tel) -> break;
-    :: nempty(tel) -> tel? drop;
-    od
-}
-
-
-/* Number of trains which passed tunnel */
-int gone = 0;
+/* Communication among operators */
+mtype msg_AB = none;
+mtype msg_BA = none;
 
 active [N_TRAINS] proctype Train ()
 {
     atomic {
-        (sig_light == 1);
-        sig_light = 0;
-        printf("Train id=%d entering\n", _pid);
-        tunnel_status ++;
+        (sig_light == green);
+        sig_light = red;
+        printf("Train in!\n");
+        trains_in_tunnel ++;
     }
 
-    printf("Train id=%d exiting\n", _pid);
-    tunnel_status --;
-    gone ++;
+    atomic {
+        trains_in_tunnel --;
+        printf("Train out\n");
+    }
+
 }
 
 active proctype OperatorA ()
 {
-    mtype in_msg;
-
+    bit sent = false;
+end:
     do
+        :: !sent && sig_light == red ->
+            printf("Light is red\n");
+            atomic {
+                msg_AB = msg0;
+                printf("MSG: Train entered!\n");
+            }
+            sent = true;
 
-    :: gone == N_TRAINS ->    /* Exit condition (all trains are gone) */
+        :: sent ->
+            if
+                :: (msg_BA == none && msg_AB == none) ->
+                    // I sent the message, OpB read it but didn't answer
+                    atomic {
+                        msg_AB = msg2;
+                        printf("MSG: Is the train still in?\n");
+                    }
 
-        printf("OpA says all trains gone.\n");
-        break;
+                :: atomic { msg_BA == msg1; msg_BA = none } ->
+                    atomic {
+                        sig_light = green;
+                        printf("Light is green\n");
+                    }
+                    sent = false;
 
-    :: else ->
-
-        (sig_light == 0);       /* Wait until a train enters */
-        printf("OpA sees the red light\n");
-        send_to_B(msg0);        /* Telegraph that to Operator B */
-
-        do
-
-        :: empty(tel_toA) ->
-            printf("OpA thinks B probably forgot and wakes him up\n");
-            send_to_B(msg1);    /* No messages: ask. */
-
-        :: nempty(tel_toA) ->               /* Got message. */
-            printf("OpA got message, sets semaphore to green\n");
-            tel_toA? in_msg;                /* Train eventually gone. */
-            sig_light = 1;
-            break;
-
-        od;
-
-    od;
-
-    printf("OpA says Goodbye\n");
+            fi
+    od
 }
 
 active proctype OperatorB ()
 {
-    mtype in_msg;
-
+end:
     do
-
-    :: gone == N_TRAINS ->    /* Exit condition (all trains are gone) */
-
-        printf("OpB says all trains gone.\n");
-        break;
-
-    :: else ->
-
-        tel_toB? in_msg;
-
-        if
-        :: in_msg == msg0 ->        /* Train entered the tunnel */
-
-            printf("OpB is informed the train the tunnel\n");
+        :: atomic { msg_AB == msg0; msg_AB = none } ->
             if
-            :: tunnel_status == 0 ->
-                printf("OpB sees the train exiting\n");
-                send_to_A(msg1);    /* I was checking */
-            :: printf("OpB forgets to watch, reading a magazine instead...\n");
-            :: printf("OpB forgets to watch, watches tv instead...\n");
-            :: printf("OpB forgets to watch, girlfriend called him...\n");
+                // Operator actually waits for the train
+                :: true ->
+                    printf("Seen train GTFO\n");
+                    (trains_in_tunnel == 0);
+                    atomic {
+                        printf("MSG: Tunnel is free\n");
+                        msg_BA = msg1;
+                    }
+
+                // Operator forgets about the train
+                :: true ->
+                    printf("Forgetting to watch\n");
+
             fi;
 
-        :: in_msg == msg1 ->        /* Operator A asked status */
-            (tunnel_status == 0);   /* Stay focused, check status */
-            printf("OpB sees the empty tunnel\n");
+        :: atomic { msg_AB == msg2; msg_AB = none } ->
+            // Operator checks the train for sure
+            printf("Observing until train GTFO\n");
+            (trains_in_tunnel == 0);
             atomic {
-                send_to_A(msg1);
-                flush(tel_toB);
+                printf("MSG: Tunnel is free!\n");
+                msg_BA = msg1;
             }
-
-        fi;
+            break;
 
     od;
-
-    printf("OpA says Goodbye\n");
 }
 
