@@ -1,28 +1,27 @@
-#define N_TRAINS 3
+#define N_TRAINS 50 
 
 mtype {
 
     /* ---- Values for signal light ------------------------------------ */
 
-    green,      /* Green semaphore */
-    red,        /* Red semaphore */
+    green,      // Green semaphore
+    red,        // Red semaphore
 
     /* ---- Messages between Operator A and Operator B ----------------- */
 
-    none,       /* No communication */
-    msg0,       /* Train in */
-    msg1,       /* Tunnel free */
-    msg2,       /* Has train left? */
+    msg0,       // Message: Train in
+    msg1,       // Message: Tunnel free
+    msg2,       // Message: Has train left?
 
 };
 
 /* Status of the system */
 mtype sig_light = green;        // 0 = red; 1 = green
-byte trains_in_tunnel = 0;      // 0 = free; 1 = in use; >1 = error
+int trains_in_tunnel = 0;       // 0 = free; 1 = in use; >1 = error
 
 /* Communication among operators */
-mtype msg_AB = none;
-mtype msg_BA = none;
+chan msg_AB = [1] of { mtype, int }
+chan msg_BA = [1] of { mtype, int }
 
 active [N_TRAINS] proctype Train ()
 {
@@ -37,73 +36,103 @@ active [N_TRAINS] proctype Train ()
         trains_in_tunnel --;
         printf("Train out\n");
     }
-
 }
 
 active proctype OperatorA ()
 {
     bit sent = false;
-end:
+    int cnt = 0;
+
+    // Communication input data
+    mtype ref_msg;
+    int ref_cnt;
+
+end1:       // Ends when signal light never gets red again
     do
         :: !sent && sig_light == red ->
             printf("Light is red\n");
             atomic {
-                msg_AB = msg0;
+                msg_AB! msg0, cnt;
                 printf("MSG: Train entered!\n");
             }
             sent = true;
 
         :: sent ->
-            if
-                :: (msg_BA == none && msg_AB == none) ->
+            do
+                :: (empty(msg_BA) && empty(msg_AB)) ->
                     // I sent the message, OpB read it but didn't answer
                     atomic {
-                        msg_AB = msg2;
+                        msg_AB ! msg2, cnt;
                         printf("MSG: Is the train still in?\n");
                     }
 
-                :: atomic { msg_BA == msg1; msg_BA = none } ->
-                    atomic {
-                        sig_light = green;
-                        printf("Light is green\n");
-                    }
-                    sent = false;
+                :: nempty(msg_BA) ->
+                    msg_BA ? ref_msg, ref_cnt;
+                    if
+                        :: (ref_cnt == cnt) ->
+                            // successfull train passing operation
+                            printf("Train %d is gone\n", ref_cnt);
+                            atomic {
+                                sig_light = green;
+                                printf("Light is green\n");
+                            }
+                            sent = false;
+                            cnt ++;
+                            break;
 
-            fi
+                        :: else ->
+                            printf("Dropping old message (%d != %d)\n", ref_cnt, cnt);
+                            skip;
+
+                    fi;
+
+            od;
     od
 }
 
 active proctype OperatorB ()
 {
-end:
-    do
-        :: atomic { msg_AB == msg0; msg_AB = none } ->
-            if
-                // Operator actually waits for the train
-                :: true ->
-                    printf("Seen train GTFO\n");
-                    (trains_in_tunnel == 0);
-                    atomic {
-                        printf("MSG: Tunnel is free\n");
-                        msg_BA = msg1;
-                    }
+    int id;
+    mtype msg;
 
-                // Operator forgets about the train
-                :: true ->
-                    printf("Forgetting to watch\n");
+end1:       // Ends when queue is empty forever
+    do ::
 
-            fi;
+        nempty(msg_AB);
+        atomic {
+            msg_AB ? msg, id;
+            printf("Got message refering to train %d\n", id);
+        }
+        if
+            :: msg == msg0 ->
+                printf("Seen train GTFOing\n");
+                (trains_in_tunnel == 0);
+                atomic {
+                    printf("MSG: Tunnel is free\n");
+                    msg_BA ! msg1, id;
+                }
 
-        :: atomic { msg_AB == msg2; msg_AB = none } ->
-            // Operator checks the train for sure
-            printf("Observing until train GTFO\n");
-            (trains_in_tunnel == 0);
-            atomic {
-                printf("MSG: Tunnel is free!\n");
-                msg_BA = msg1;
-            }
-            break;
+            :: msg == msg0 ->
+                printf("Forgetting to watch\n");
 
+            :: msg == msg2 ->
+                printf("Observing until train GTFOs\n");
+                (trains_in_tunnel == 0);
+                atomic {
+                    printf("MSG: Tunnel is free!\n");
+                    msg_BA ! msg1, id;
+                }
+
+        fi;
     od;
 }
 
+/*
+
+    To notice:
+
+        Communication channels are supposed to be reliable. The checking
+        empty(channel) corresponds to getting confirmation about a correct
+        deliverying of the message.
+
+ */
