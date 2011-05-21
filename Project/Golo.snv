@@ -1,0 +1,67 @@
+MODULE Hourglass (n)
+
+VAR
+    time : 0 .. 16;
+    active : boolean;
+
+ASSIGN
+    init(time) := 0;
+    next(time) :=
+        case
+            active = 1 : (time + 1) mod n;
+            active = 0 : time;
+        esac;
+
+DEFINE
+    expired := (time + 1 = n);
+
+
+MODULE main
+
+VAR
+    h7 : Hourglass(7);
+    h11 : Hourglass(11);
+    phase : 0 .. 6;
+    cooking : boolean;
+    egg : 0 .. 100;
+
+ASSIGN
+
+    init(phase) := 1;
+    next(phase) :=
+        case
+            phase = 1 & h11.expired : 2;
+            phase = 6               : phase;
+            phase > 1 & h7.expired  : phase + 1;
+            1                       : phase;
+        esac;
+
+    init(h7.active) := 1;
+    next(h7.active) :=
+        case
+            phase = 6 : 0;
+            1         : 1;
+        esac;
+
+    init(h11.active) := 1;
+    next(h11.active) :=
+        case
+            phase = 1 : 1;
+            1         : 0;
+        esac;
+
+    init(cooking) := 0;
+    next(cooking) :=
+        case
+            phase = 2 : 1;
+            phase = 6 : 0;
+            1         : cooking;
+        esac;
+
+    init(egg) := 0;
+    next(egg) :=
+        case
+            cooking = 0 : egg;
+            cooking = 1 : (egg + 1) mod 100;
+        esac;
+
