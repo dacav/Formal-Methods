@@ -1,3 +1,16 @@
+--------------------------------------------------------------------------
+-- Hourglass module ------------------------------------------------------
+--
+-- Representation of a parametrized hourglass.
+--
+-- The "expired" variable becomes 1 when the hourglass is going to expire
+-- on the next state.
+--
+-- The hourglass is automatically restarted when this happens, and the
+-- "active" variable can be used to disable the hourglass.
+--------------------------------------------------------------------------
+
+
 MODULE Hourglass (n)
 
 VAR
@@ -15,6 +28,25 @@ ASSIGN
 DEFINE
     expired := (time + 1 = n);
 
+--------------------------------------------------------------------------
+-- Golo's dinner problem -------------------------------------------------
+--
+-- This model encodes the solution of the problem as behavior that allows
+-- the system to reach the 24 minutes required.
+--
+-- We have 6 phases:
+--      1)  The h11 hourglass elapses while we keep invering the other
+--          one;
+--      2)  We start cooking. Since the h7 hourglass has been inverted,
+--          it will run for another 3 minutes before being inverted again
+--          (first 3 minutes cooking). Meanwhile the h11 hourglass is
+--          stopped;
+--      3)  We wait until the h7 hourglass elapses (+7 minutes cooking);
+--      4)  We wait until the h7 hourglass elapses (+7 minutes cooking);
+--      5)  We wait until the h7 hourglass elapses (+7 minutes cooking);
+--      6)  We stop cooking, since 3 + 7 * 3 = 8 * 3 = 24.
+--
+--------------------------------------------------------------------------
 
 MODULE main
 
@@ -27,6 +59,7 @@ VAR
 
 ASSIGN
 
+    -- Phases of the cooking procedure
     init(phase) := 1;
     next(phase) :=
         case
@@ -36,6 +69,7 @@ ASSIGN
             1                       : phase;
         esac;
 
+    -- Activation / deactivation of the 7 seconds hourglass
     init(h7.active) := 1;
     next(h7.active) :=
         case
@@ -43,6 +77,7 @@ ASSIGN
             1         : 1;
         esac;
 
+    -- Activation / deactivation of the 11 seconds hourglass
     init(h11.active) := 1;
     next(h11.active) :=
         case
@@ -50,6 +85,8 @@ ASSIGN
             1         : 0;
         esac;
 
+    -- The cooking period goes from phase 2 to phase 6 during which the
+    -- "cooking" boolean vairable is 1.
     init(cooking) := 0;
     next(cooking) :=
         case
@@ -58,10 +95,32 @@ ASSIGN
             1         : cooking;
         esac;
 
+    -- The "egg" counter is incremented when the "cooking" variable is 1
     init(egg) := 0;
     next(egg) :=
         case
             cooking = 0 : egg;
             cooking = 1 : (egg + 1) mod 100;
         esac;
+
+DEFINE
+    egg_ready := (egg = 24);
+    egg_overcooked := (egg = 25);
+
+--------------------------------------------------------------------------
+-- Safety ----------------------------------------------------------------
+
+-- The egg never cooks for 25 minutes
+LTLSPEC G (egg < 25);
+
+-- Equivalently, once reached the 24th minute the cooking process is
+-- stopeed.
+LTLSPEC G (egg_ready -> X !egg_overcooked)
+
+--------------------------------------------------------------------------
+-- Liveness --------------------------------------------------------------
+
+-- Eventuall the egg will be cooked
+LTLSPEC F (egg_ready);
+
 
