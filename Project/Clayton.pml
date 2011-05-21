@@ -1,4 +1,4 @@
-#define N_TRAINS 50 
+#define N_TRAINS 3
 
 mtype {
 
