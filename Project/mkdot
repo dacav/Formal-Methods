@@ -59,7 +59,7 @@ class TraceGraph :
     def iter_descrs (self):
         formatter = lambda d : "{0}={1}".format(*d)
         for (dsc, i) in self.descs.iteritems():
-            yield i, '\\\n'.join(map(formatter, dsc))
+            yield i, '\\n'.join(map(formatter, dsc))
 
     def iter_nodes (self):
         return self.nodes.iteritems()
