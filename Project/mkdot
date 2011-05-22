@@ -1,0 +1,98 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+
+import sys
+from collections import deque, defaultdict
+from itertools import ifilter as filter, \
+                      imap as map, \
+                      count
+
+def read_step (f=sys.stdin):
+    D = deque()
+    for r in f:
+        if r.startswith("-> State"):
+            D.clear()
+        elif r.startswith("-> Input"):
+            yield list(D)
+        else:
+            k, _, v = r.split()
+            D.append((k, v))
+
+def trace (rs, to_trace):
+    if to_trace:
+        flt = lambda (k, v) : k in to_trace;
+    else:
+        flt = lambda (k, v) : True;
+    L = dict()
+    for s in rs:
+        L.update(s)
+        kv = list(filter(flt, L.iteritems()))
+        kv.sort()
+        yield tuple(kv)
+
+class TraceGraph :
+
+    class Cnt :
+        def __init__ (self):
+            self.c = count()
+        def __call__ (self):
+            return next(self.c)
+
+    def __init__ (self, steps):
+        self.nodes = defaultdict(list)
+        try:
+            self.run(steps)
+        except StopIteration:
+            pass
+
+    def run (self, steps):
+        steps = iter(steps)
+        descs = defaultdict(TraceGraph.Cnt())
+        prev = descs[next(steps)]
+        for n, lt in enumerate(steps):
+            cur = descs[lt]
+            self.nodes[prev].append((cur, n))
+            prev = cur
+        self.descs = descs
+
+    def iter_descrs (self):
+        formatter = lambda d : "{0}={1}".format(*d)
+        for (dsc, i) in self.descs.iteritems():
+            yield i, '\\\n'.join(map(formatter, dsc))
+
+    def iter_nodes (self):
+        return self.nodes.iteritems()
+
+def dots_output (tg, of=sys.stdout):
+
+    print("digraph G {", file=of);
+
+    fmt = "\tnode_{0:03d} [label=\"{1}\"]"
+    for desc in tg.iter_descrs():
+        print(fmt.format(*desc), file=of)
+
+    fmt = "\tnode_{0:03d} -> node_{1:03d} [\"{2}\"]"
+    for nid, nexts in tg.iter_nodes():
+        for nxid, step_cnt in nexts:
+            print(fmt.format(nid, nxid, step_cnt), file=of)
+
+    print("}");
+
+def main (argv=None):
+    if not argv: argv = sys.argv
+
+    if len(argv) > 1:
+        to_trace = argv[1:];
+    else:
+        to_trace = None
+
+    steps = trace(read_step(), to_trace)
+    graph = TraceGraph(steps)
+    dots_output(graph)
+
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())
+
