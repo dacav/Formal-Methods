@@ -72,7 +72,7 @@ def dots_output (tg, of=sys.stdout):
     for desc in tg.iter_descrs():
         print(fmt.format(*desc), file=of)
 
-    fmt = "\tnode_{0:03d} -> node_{1:03d} [\"{2}\"]"
+    fmt = "\tnode_{0:03d} -> node_{1:03d} [label=\"{2}\"]"
     for nid, nexts in tg.iter_nodes():
         for nxid, step_cnt in nexts:
             print(fmt.format(nid, nxid, step_cnt), file=of)
