@@ -21,10 +21,10 @@ int trains_in_tunnel = 0;       // 0 = free; 1 = in use; >1 = error
 int trains_out_tunnel = 0;      // Eventually will coincide with N_TRAINS
 
 /* Safety: mutual exclusion on the tunnel */
-#define safety (trains_in_tunnel <= 1)
+#define safe (trains_in_tunnel <= 1)
 
 /* Liveness: sooner or later all trains will pass the tunnel */
-#define eventually (trains_out_tunnel == N_TRAINS)
+#define sound (trains_out_tunnel == N_TRAINS)
 
 /* Communication among operators */
 chan msg_AB = [1] of { mtype, int }
