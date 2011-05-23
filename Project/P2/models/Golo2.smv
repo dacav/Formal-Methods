@@ -22,11 +22,11 @@ ASSIGN
     next(time) :=
         case
             reset = 1  : 0;
-            1          : (time + 1) mod n;
+            1          : ( time + 1 ) mod n;
         esac;
 
 DEFINE
-    expired := (time + 1 = n);
+    expired := ( time + 1 = n );
 
 --------------------------------------------------------------------------
 -- Golo's dinner problem -------------------------------------------------
@@ -86,10 +86,11 @@ DEFINE
     egg_ready := ( egg = 24 );
     egg_overcooked := ( egg = 25 );
 
-    stop := event & egg_ready;
+    stop := ( event & egg_ready );
 
 --------------------------------------------------------------------------
 -- Reachability of the solution ------------------------------------------
 
 SPEC EF AG egg_ready;
 
+--------------------------------------------------------------------------

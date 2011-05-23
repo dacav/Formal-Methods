@@ -21,12 +21,12 @@ ASSIGN
     init(time) := 0;
     next(time) :=
         case
-            active = 1 : (time + 1) mod n;
+            active = 1 : ( time + 1 ) mod n;
             active = 0 : time;
         esac;
 
 DEFINE
-    expired := (time + 1 = n);
+    expired := ( time + 1 = n );
 
 --------------------------------------------------------------------------
 -- Golo's dinner problem -------------------------------------------------
@@ -100,12 +100,12 @@ ASSIGN
     next(egg) :=
         case
             cooking = 0 : egg;
-            cooking = 1 : (egg + 1) mod 100;
+            cooking = 1 : ( egg + 1 ) mod 100;
         esac;
 
 DEFINE
-    egg_ready := (egg = 24);
-    egg_overcooked := (egg = 25);
+    egg_ready := ( egg = 24 );
+    egg_overcooked := ( egg = 25 );
 
 --------------------------------------------------------------------------
 -- Safety ----------------------------------------------------------------
@@ -120,7 +120,8 @@ LTLSPEC G (egg_ready -> X !egg_overcooked)
 --------------------------------------------------------------------------
 -- Liveness --------------------------------------------------------------
 
--- Eventuall the egg will be cooked
+-- Eventually the egg will be cooked
 LTLSPEC F (egg_ready);
 
+--------------------------------------------------------------------------
 
