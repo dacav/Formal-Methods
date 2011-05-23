@@ -5,15 +5,20 @@ from __future__ import print_function
 import sys
 from collections import deque, defaultdict
 from itertools import ifilter as filter, \
-                      imap as map, \
-                      count
+                      imap as map
+import itertools as it
+
+begin_node = lambda r : r.startswith("-> State")
+n_begin_node = lambda r : not r.startswith("-> State")
+end_node = lambda r : r.startswith("-> Input")
 
 def read_step (f=sys.stdin):
     D = deque()
+    f = it.dropwhile(n_begin_node, f)
     for r in f:
-        if r.startswith("-> State"):
+        if begin_node(r):
             D.clear()
-        elif r.startswith("-> Input"):
+        elif end_node(r):
             yield list(D)
         else:
             k, _, v = r.split()
@@ -35,7 +40,7 @@ class TraceGraph :
 
     class Cnt :
         def __init__ (self):
-            self.c = count()
+            self.c = it.count()
         def __call__ (self):
             return next(self.c)
 
