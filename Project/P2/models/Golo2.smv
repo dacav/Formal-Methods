@@ -63,7 +63,7 @@ ASSIGN
             event : { 0, 1 };
             1     : cooking;
         esac;
-    
+
     init(h7.reset) := 0;
     next(h7.reset) :=
         case
