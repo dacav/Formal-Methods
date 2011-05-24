@@ -1,7 +1,5 @@
 .PHONY : all clean
 
-VARIABLES := egg h11.time h7.time event
-
 TRACES := $(wildcard executions/*.trace)
 TRACES_PDF := $(TRACES:.trace=.pdf)
 MKDOT := scripts/mkdot
@@ -13,4 +11,5 @@ clean:
 	rm -rvf $(TRACES_PDF)
 
 %.pdf: %.trace
-	$(MKDOT) $(VARIABLES) < $< | $(DOT) -Tpdf -o $@
+	$(MKDOT) egg h11.time h7.time event < $< | $(DOT) -Tpdf -o $@
+

@@ -50,6 +50,10 @@ ASSIGN
     init(egg) := 0;
     next(egg) :=
         case
+            -- Here the only significative change with respect to previous
+            -- model: if the cooking phase is interrupted before the egg
+            -- is cooked, then the counter is reset. This forces the
+            -- system to do the cooking phase at-once.
             cooking = 1 & egg_overcooked     : egg;
             cooking = 1 & egg < 25           : egg + 1;
             cooking = 0 & egg_ready          : egg;
@@ -84,8 +88,6 @@ DEFINE
 
     egg_ready := ( egg = 24 );
     egg_overcooked := ( egg = 25 );
-
-    stop := event & egg_ready;
 
 --------------------------------------------------------------------------
 -- Reachability of the solution ------------------------------------------

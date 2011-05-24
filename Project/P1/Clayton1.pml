@@ -37,7 +37,7 @@ active [N_TRAINS] proctype Train ()
 {
     atomic {
         // Here we got the problem: if the next train arrives before
-        // Operator A manually sets the signal light, the protocol is
+        // OperatorA manually sets the signal light, the protocol is
         // broken.
         (sig_light == green);
         if
@@ -155,12 +155,3 @@ end1:       // Ends when queue is empty forever
     od;
 }
 
-/*
-
-    To notice:
-
-        Communication channels are supposed to be reliable. The checking
-        empty(channel) corresponds to getting confirmation about a correct
-        deliverying of the message.
-
- */

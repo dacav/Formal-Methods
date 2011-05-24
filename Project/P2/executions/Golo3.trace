@@ -9,7 +9,6 @@ Trace Type: Counterexample
   h11.reset = 0
   egg = 0
   cooking = 0
-  stop = 0
   egg_overcooked = 0
   egg_ready = 0
   event = 0
