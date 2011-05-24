@@ -5,12 +5,57 @@
 \]
 
 \begin{itemize}
+
 \item   Fair path $\pi$: $\forall F_i \in F$, $\pi$ visits infinitely
         often at least one state $S \in F_i$;
+
 \item   Fair states: originating a fair path;
+
 \item   $M_f$ is a fair model, a Kripke Model restricted to the fair
         paths.
-\item   Syntactic sugar: $M_f,s \Entails \E{\varphi}
-        \:\Leftrightarrow\: M,s \Entails \E{\varphi}_f$
+
+\item   Syntactic sugar:
+        \[ M_f,s \Entails \E{\phi}
+           \:\Leftrightarrow\: M,s \Entails \Ef{\phi}{f} \]
+        \[ M_f,s \Entails \A{\phi}
+           \:\Leftrightarrow\: M,s \Entails \Af{\phi}{f} \]
+
+\item   All fair states are encoded by a single set: $\Fair =
+        \Ef{\G{\True}}{f}$:
+    \begin{itemize}
+    \item   $\Ef{\X{\phi}}{f}$ obtained as $\E{\X{(\varphi \lAnd \Fair)}}$;
+    \item   $\Ef{\U{\varphi}{\psi}}{f}$ obtained as $\E{\U{\varphi}{(\psi \lAnd
+            \Fair)}}$
+    \item   In order to compute $\Fair$ we need a function to compute
+            $\Ef{\G{\varphi}}{f}$
+    \end{itemize}
+
 \end{itemize}
+
+\subsubsection{Non-symbolic: SCC}
+
+    Computation of $\Ef{\G{\varphi}}{f}$ with sets:
+
+    \begin{itemize}
+
+    \item   Restrict states of $M$ to $\Denot{\varphi}$, obtaining
+            $M^\prime$;
+
+    \item   Compute the union of all strongly connected components of
+            $M^\prime$: \[C = \IterUnion{i = 1}{n}{C_i}\]
+
+    \item   $\Denot{\Ef{\G{\varphi}}{f}} =
+             \Denot{\E{\U{\varphi}{\mathcal{C}}}}$
+            where $\Denot{\mathcal{C}} = C$
+
+        \begin{itemize}
+        \item   If we are in $C$ then we are in $C_i$ for some $i \in 
+                \Set{ 1 \cdot n }$;
+        \item   Since $C_i$ is part of $M^\prime$, $\varphi$ always holds
+                in states of $C_i$;
+        \end{itemize}
+
+    \end{itemize}
+
+\subsubsection{Symbolic: \emph{Emerson Lei}}
 
