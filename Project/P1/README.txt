@@ -2,7 +2,7 @@
                             About the project:
 --------------------------------------------------------------------------
 
-There are two models:
+Two models delivered:
 
     Clayton0.pml
 
@@ -57,8 +57,11 @@ Both models declare the following constraints to be checked:
                  Automatic stuff - I love automatic stuff
 --------------------------------------------------------------------------
 
-The included Makefile, if called with "make" (no parameters are needed)
-will automatically:
+There's a Makefile inside the directory. You may need to the first line
+depending on what's the name of the spin executable on your own system.
+
+After that step, by calling "make" (no parameters are needed) you will
+automatically:
 
     (1) Generate the files safe.pml and sound.pml corresponding
         respectively to the never-claims: '<> !safe' and '[] !sound'
@@ -72,5 +75,5 @@ files and the generated trails will be kept).
 
 Note:   The compilation is achieved with the -DFBS flag (thus the
         generated trail will be as short as possible. The behavior can be
-        modified by editing the makefile, row 6.
+        modified by editing the makefile, row 5.
 

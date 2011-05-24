@@ -1,8 +1,7 @@
-.PHONY : all build_trails clean
-
 SPIN := spin601_linux64
-PMLS := $(filter-out safe.pml sound.pml, $(wildcard *.pml))
 
+.PHONY : all build_trails clean
+PMLS := $(filter-out safe.pml sound.pml, $(wildcard *.pml))
 export CFLAGS := -DBFS
 
 all: build_trails

@@ -53,40 +53,59 @@ ASSIGN
     init(egg) := 0;
     next(egg) :=
         case
+            -- Eggs remains the same if not cooking or the egg is
+            -- over-cooked;
             !cooking | egg_overcooked : egg;
+
+            -- Cooking continues otherwise.
             cooking & egg < 25        : egg + 1;
         esac;
 
     init(cooking) := {0, 1};
     next(cooking) :=
         case
+            -- At each event we may decide to stop cooking;
             event : { 0, 1 };
+            -- If no event occoured we keep doing what we were doing
+            -- before.
             1     : cooking;
         esac;
 
     init(h7.reset) := 0;
     next(h7.reset) :=
         case
+            -- If egg is overcooked we no longer need to reset
+            -- hourglass;
             egg >= 25 : 0;
+
+            -- Each event may non-deterministically reset the hourglass;
             event     : { 0, 1 };
+
+            -- In any other case we keep it reset or we let it running
+            -- depending on what we did before.
             1         : h7.reset;
         esac;
 
     init(h11.reset) := 0;
     next(h11.reset) :=
         case
+            -- Same behavior as h7
             egg >= 25 : 0;
             event     : { 0, 1 };
             1         : h11.reset;
         esac;
 
 DEFINE
+    -- Event is when one of the two hourglasses expired;
     event := ( h7.expired | h11.expired );
 
+    -- Egg is ready if cooked for 24 minutes;
     egg_ready := ( egg = 24 );
-    egg_overcooked := ( egg = 25 );
 
-    stop := ( event & egg_ready );
+    -- Egg is overcooked if it cooked for more than 24 mintes. This is
+    -- encoded as 25, since 25 is the maximum value the "egg" variable can
+    -- absume.
+    egg_overcooked := ( egg = 25 );
 
 --------------------------------------------------------------------------
 -- Reachability of the solution ------------------------------------------
