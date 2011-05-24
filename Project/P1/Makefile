@@ -29,5 +29,4 @@ clean:
 	rm -rvf safe.pml sound.pml
 	rm -rvf $(PMLS:.pml=_safe)
 	rm -rvf $(PMLS:.pml=_sound)
-	rm -rvf *bin *trail
 
