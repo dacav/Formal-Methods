@@ -89,7 +89,6 @@ end1:       // Ends when signal light never gets red again
 
                         :: else ->
                             printf("Dropping old message (%d != %d)\n", ref_cnt, cnt);
-                            skip;
 
                     fi;
 
