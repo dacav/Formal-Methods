@@ -41,10 +41,10 @@ active [N_TRAINS] proctype Train ()
         // broken.
         (sig_light == green);
         if
-        :: sig_light = red;
-        :: bell = true;
+        :: true -> sig_light = red;
+        :: true -> bell = true;
         fi;
-        printf("Train in!\n");
+        printf("Train in!\n", sig_light, bell);
         trains_in_tunnel ++;
     }
 
@@ -74,7 +74,8 @@ active proctype OperatorA ()
 end1:       // Ends when signal light never gets red again
     do
         :: !sent && bell ->
-            printf("Heard bell! Setting light manually");
+            bell = false;
+            printf("Heard bell! Setting light manually\n");
             sig_light = red;
             signal_train_in(cnt);
             sent = true;
