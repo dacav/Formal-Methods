@@ -12,8 +12,6 @@ verify: safe.pml sound.pml
 			CHECK=$$(basename $${p} .pml)_$${c}; \
 			mkdir $${CHECK}; \
 			mv pan.* $${CHECK}; \
-			$(MAKE) -C $${CHECK} pan; \
-			mv $${CHECK}/pan ./pan_$${CHECK}; \
 		done; \
 	done
 
@@ -27,5 +25,4 @@ clean:
 	rm -rvf safe.pml sound.pml
 	rm -rvf $(PMLS:.pml=_safe)
 	rm -rvf $(PMLS:.pml=_sound)
-	rm -rvf pan*safe pan*sound
 
