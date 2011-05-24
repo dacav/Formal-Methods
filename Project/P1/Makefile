@@ -1,11 +1,13 @@
-.PHONY : all clean
+.PHONY : all build_trails clean
 
 SPIN := spin601_linux64
 PMLS := $(filter-out safe.pml sound.pml, $(wildcard *.pml))
 
 export CFLAGS := -DBFS
 
-all: safe.pml sound.pml
+all: build_trails
+
+build_trails: safe.pml sound.pml
 	for c in safe sound; do \
 		for p in $(PMLS); do \
 			$(SPIN) -a -N $${c}.pml $${p}; \
@@ -13,7 +15,7 @@ all: safe.pml sound.pml
 			mkdir $${CHECK}; \
 			mv pan.* $${CHECK}; \
 			$(MAKE) -C $${CHECK} pan; \
-			mv $${CHECK}/pan ./$${CHECK}.bin; \
+			$${CHECK}/pan -x; \
 		done; \
 	done
 
@@ -27,5 +29,5 @@ clean:
 	rm -rvf safe.pml sound.pml
 	rm -rvf $(PMLS:.pml=_safe)
 	rm -rvf $(PMLS:.pml=_sound)
-	rm -rvf *bin
+	rm -rvf *bin *trail
 
