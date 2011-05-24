@@ -129,9 +129,40 @@ Basic idea: use formulae to represent set of states.
 
     \item   In symbolic model checking: $\Symb{I} \imply
             \Symb{\Denot{\psi}}$.
+        \begin{itemize}
+        \item   Note that computation of $\Denot{\psi}$ requires fixed
+                point computation;
+        \item   However we don't compute the denotation: we work directly
+                with symbolic formulas, thus the fixed point is reached
+                through symbolic preimages.
+        \end{itemize}
 
     \end{itemize}
 
     \Note{Formulas are assumed to be written in terms of $\neg a$,
           $a \lAnd b$, $\E{\X{a}}$, $\E{\G{a}}$, $\E{\U{a}{b}}$}
+
+    \subsubsection{Checking invariants $\AG{\neg\Bad}$}
+        \begin{itemize}
+        \item   Backward strategy: apply Pre-images to $\Bad$ until the
+                set $I$ is intersected or a fixed point is reached;
+        \item   Forward strategy: apply Images to the set $I$ until a
+                $\Bad$ or a fixed point is reached:
+            \begin{itemize}
+            \item   Optimization: keep incremental set of images but apply
+                    Image function only to the frontier (namely the
+                    intersection between the previous image and the
+                    negation of the incremental set itself);
+            \item   Counter-example generation:
+                \begin{itemize}
+                \item   Keep track of fronteers: $F_1 \cdots F_n$;
+                \item   We reached bad state if $F_n \cap \Bad
+                        \neq\emptyset$;
+                \item   Find $t_{n-1} = F_{n-1} \cap \PreImage{F_n \cap
+                        \Bad}$.
+                \item   Continue to $t_0$ and get Counter-example;
+                \item   Use magnets to make it simpler.
+                \end{itemize}
+            \end{itemize}
+        \end{itemize}
 
