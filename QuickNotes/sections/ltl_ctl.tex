@@ -11,8 +11,8 @@
                 some state.
         \end{itemize}
 
-    \item   Basic operators: $\set{ \X{\varphi}, \U{\psi}{\varphi} }$ (the other
-            are syntactic sugar).
+    \item   Basic operators: $\set{ \X{\varphi}, \U{\psi}{\varphi} }$ (the
+            other are syntactic sugar).
 
     \item   Popular properties:
 
@@ -44,11 +44,22 @@
     \begin{itemize}
 
     \item   Temporal logic with
-            $\Set{ \EX{\varphi}, \EU{\varphi}{\psi}, \EG{\varphi}, \EF{\varphi},
-                   \AX{\varphi}, \AU{\varphi}{\psi}, \AG{\varphi}, \AF{\varphi} }$
+            $\Set{ \EX{\varphi}, \EU{\varphi}{\psi}, \EG{\varphi},
+            \EF{\varphi}, \AX{\varphi}, \AU{\varphi}{\psi}, \AG{\varphi},
+            \AF{\varphi} }$
 
     \end{itemize}
 
 \subsection{\CTLs}
 
-    TODO
+    The grammar allows formulae like
+    \[
+    M, s_i \Entails \A{\varphi} \qquad M, s_i \Entails \E{\varphi}
+    \]
+    \begin{itemize}
+    \item   The former says \Intuit{$\forall$ paths $\pi$ originating from
+            $s_i$ such that $M, \pi \Entails \varphi$};
+    \item   The latter says \Intuit{$\exists$ a path $\pi$ originating from
+            $s_i$ such that $M, \pi \Entails \varphi$};
+    \end{itemize}
+

@@ -24,8 +24,8 @@
         \Ef{\G{\True}}{f}$:
     \begin{itemize}
     \item   $\Ef{\X{\phi}}{f}$ obtained as $\E{\X{(\varphi \lAnd \Fair)}}$;
-    \item   $\Ef{\U{\varphi}{\psi}}{f}$ obtained as $\E{\U{\varphi}{(\psi \lAnd
-            \Fair)}}$
+    \item   $\Ef{\U{\varphi}{\psi}}{f}$ obtained as $\E{\U{\varphi}{(\psi
+            \lAnd \Fair)}}$
     \item   In order to compute $\Fair$ we need a function to compute
             $\Ef{\G{\varphi}}{f}$
     \end{itemize}
@@ -38,11 +38,11 @@
 
     \begin{itemize}
 
-    \item   Restrict states of $M$ to $\Denot{\varphi}$, obtaining
-            $M^\prime$;
+    \item   Restrict states of a Kripke Model $M$ to
+            $\Denot{\varphi}$, obtaining $M^\prime$;
 
-    \item   Compute the union of all strongly connected components of
-            $M^\prime$: \[C = \IterUnion{i = 1}{n}{C_i}\]
+    \item   Compute the union of all \emph{fair} strongly connected
+            components of $M^\prime$: \[C = \IterUnion{i = 1}{n}{C_i}\]
 
     \item   $\Denot{\Ef{\G{\varphi}}{f}} =
              \Denot{\E{\U{\varphi}{\mathcal{C}}}}$
@@ -52,10 +52,21 @@
         \item   If we are in $C$ then we are in $C_i$ for some $i \in 
                 \Set{ 1 \cdot n }$;
         \item   Since $C_i$ is part of $M^\prime$, $\varphi$ always holds
-                in states of $C_i$;
+                in states of $C_i$; and since $C_i$ is a \emph{fair} SCC
+                we have also fairness
         \end{itemize}
 
     \end{itemize}
 
 \subsubsection{Symbolic: \emph{Emerson Lei}}
+
+    We cannot easily do a symbolic representation of SCC, thus we directly
+    encode fairness conditions inside the fixed-point based symbolic
+    representation of the formula $\Ef{\G{\varphi}}{f}$.
+
+    \[
+    \SymbDenot{\Ef{\G{\varphi}}{f}} =
+        \SymbDenot{\varphi} \IterIntersect{f \in F}{}{
+        }
+    \]
 
