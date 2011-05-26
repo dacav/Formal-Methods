@@ -15,7 +15,7 @@
 
 % Special paragraphs
 
-\newcommand{\Intuit}[1]{``\emph{#1}''}
+\newcommand{\Intuit}[1]{``\emph{{#1}}''}
 \newcommand{\Note}[1]{ %
     \begin{description} %
     \item[Note:] {#1} %
@@ -31,8 +31,8 @@
 \newcommand{\G}[1]{\Op{G}#1}
 \newcommand{\F}[1]{\Op{F}#1}
 
-\newcommand{\E}[1]{\mathcal{\Op{E}}#1}
-\newcommand{\A}[1]{\mathcal{\Op{A}}#1}
+\newcommand{\E}[1]{\mathcal{\Op{E}}{#1}}
+\newcommand{\A}[1]{\mathcal{\Op{A}}{#1}}
 
 \newcommand{\Ef}[2]{\mathcal{\Op{E}}_{#2}{#1}}
 \newcommand{\Af}[2]{\mathcal{\Op{A}}_{#2}{#1}}
@@ -51,6 +51,7 @@
 
 \newcommand{\Denot}[1]{\left[{#1}\right]}
 \newcommand{\Symb}[1]{\xi\left({#1}\right)}
+\newcommand{\SymbDenot}[1]{\Symb{\Denot{{#1}}}}
 \newcommand{\PreImage}[1]{\mbox{\emph{PreImage}}\left({#1}\right)}
 \newcommand{\Image}[1]{\mbox{\emph{Image}}\left({#1}\right)}
 
@@ -66,6 +67,7 @@
 \newcommand{\IterAnd}[3]{\bigwedge_{#1}^{#2}\left({#3}\right)}
 \newcommand{\IterOr}[3]{\bigvee_{#1}^{#2}\left({#3}\right)}
 \newcommand{\IterUnion}[3]{\bigcup_{#1}^{#2}\left({#3}\right)}
+\newcommand{\IterIntersect}[3]{\bigcap_{#1}^{#2}\left({#3}\right)}
 \newcommand{\lOr}{\vee}
 \newcommand{\lAnd}{\wedge}
 \newcommand{\Entails}{\vDash}

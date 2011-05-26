@@ -61,4 +61,19 @@
 
             \end{itemize}
 
+    \section{About SCC-based algorithm for $\Ef{\G{\varphi}}{f}$}
+
+        The Fair Strongly Connected Components are found in a Kripke Model
+        which is limited to the states in which $\varphi$ holds.
+
+        The fairness comes directly from the fact we used a fair Kripke
+        Model, while the SCC gives guarantees about existence of a path
+        for which $\varphi$ always holds. At this point we do the union
+        $C$ of all SCC, and we compute $\E{\U{\Denot{\varphi}}{C}}$.
+
+        The point is that $C$ ensures both membership in $\Denot{\varphi}$
+        and fairness, while $\Denot{\varphi}$ doesn't give fairness. Note
+        that we require fair states to be touched infinitely often, but
+        not to be globally into fair states.
+
 \end{document}
