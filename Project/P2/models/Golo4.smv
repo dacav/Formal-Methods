@@ -1,0 +1,100 @@
+--------------------------------------------------------------------------
+-- Hourglass module ------------------------------------------------------
+--
+-- Representation of a parametrized hourglass.
+--
+-- Acting on the "turned" variable you can turn the hourglass which counts
+-- backward until expired.
+--
+-- The "expired" variable becomes 1 when the hourglass is going to expire
+-- on the next state.
+--------------------------------------------------------------------------
+
+
+MODULE Hourglass (n)
+
+VAR
+    time : 0 .. 16;
+    turned : boolean;
+
+ASSIGN
+    init(time) := 0;
+    init(turned) := 0;
+
+    next(time) :=
+        case
+            -- Increase counter when not turned;
+            !turned & time < n  : time + 1;
+            !turned & time >= n : n;
+
+            -- Decrease counter when turned;
+            turned & time > 0   : time - 1;
+            turned & time = 0   : 0;
+        esac;
+
+DEFINE
+    expired := ( (turned & time = 1) | (!turned & time = n - 1) );
+
+--------------------------------------------------------------------------
+-- Golo's dinner problem -------------------------------------------------
+--------------------------------------------------------------------------
+
+MODULE main
+
+VAR
+    h7 : Hourglass(7);
+    h11 : Hourglass(11);
+    egg : 0 .. 25;
+    event_cnt : 0 .. 25;
+
+ASSIGN
+
+    -- The event_cnt variable is useful to track operations. By using it
+    -- as observed variable in the scripts/mkdot script we get the
+    -- sequence of hourglass turning.
+    init(event_cnt) := 0;
+    next(event_cnt) :=
+        case
+            event_cnt < 25 & event : event_cnt + 1;
+            1                      : event_cnt;
+        esac;
+
+    -- Status of the egg.
+    init(egg) := 0;
+    next(egg) :=
+        case
+            both_expired | (egg_ready & event) | (egg_overcooked) : egg;
+            egg < 24         : egg + 1;
+            1                : egg;
+        esac;
+
+    -- Non-deterministically turned at each event. Note that every
+    -- execution always keeping the same value for "turned" goes into
+    -- deadlock because of the absence of events.
+    next(h7.turned) :=
+        case
+            event : {0, 1};
+            1     : h7.turned;
+        esac;
+
+    -- Non-deterministically turned at each event. Same considerations as
+    -- before.
+    next(h11.turned) :=
+        case
+            event : {0, 1};
+            1     : h11.turned;
+        esac;
+
+DEFINE
+    event := ( h7.expired | h11.expired );
+    both_expired := ( h7.expired & h11.expired );
+    egg_ready := ( egg = 24 );
+    egg_overcooked := ( egg = 25 );
+
+--------------------------------------------------------------------------
+-- Reachability of the solution ------------------------------------------
+
+SPEC EF AG egg_ready;
+SPEC AG (egg_ready -> AX !egg_overcooked);
+
+--------------------------------------------------------------------------
