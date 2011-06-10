@@ -23,6 +23,7 @@ def read_step (f=sys.stdin):
         else:
             k, _, v = r.split()
             D.append((k, v))
+    yield list(D)
 
 def trace (rs, to_trace):
     if to_trace:
